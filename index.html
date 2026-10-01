@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Meine Rechnungen</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif;background:#f3f4f6;color:#111827}
+header{background:#111827;color:white;padding:18px 16px calc(14px + env(safe-area-inset-top));position:sticky;top:0;z-index:5}
+h1{margin:0;font-size:22px}.sub{opacity:.7;font-size:13px;margin-top:3px}
+nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;display:flex;padding:7px 4px calc(7px + env(safe-area-inset-bottom));z-index:10}
+nav button{flex:1;border:0;background:none;padding:8px 2px;color:#6b7280;font-size:11px}nav button.active{color:#111827;font-weight:700}
+main{max-width:760px;margin:auto;padding:16px 14px 100px}.screen{display:none}.screen.active{display:block}
+.card{background:white;border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 1px 4px #0000000c}
+button,.btn{border:0;border-radius:12px;padding:12px 15px;background:#111827;color:white;font-size:15px;font-weight:600}
+button.secondary{background:#e5e7eb;color:#111827}.danger{background:#fee2e2!important;color:#991b1b!important}
+.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}
+input,textarea,select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;font-size:16px;background:white}
+label{display:block;font-size:13px;color:#6b7280;margin:10px 0 5px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.item{border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin:9px 0}.itemgrid{display:grid;grid-template-columns:1fr 80px 110px;gap:8px}
+.total{font-size:18px;font-weight:800}.muted{color:#6b7280}.empty{text-align:center;padding:35px 10px;color:#6b7280}
+.badge{font-size:11px;background:#dcfce7;color:#166534;border-radius:99px;padding:4px 8px}
+@media(max-width:520px){.itemgrid{grid-template-columns:1fr 70px 95px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>Meine Rechnungen</h1><div class="sub">Kleinunternehmer · keine MwSt. ausgewiesen</div></header>
+
+<main>
+<section id="invoices" class="screen active">
+ <div class="row between" style="margin-bottom:12px"><strong>Rechnungen</strong><button onclick="newInvoice()">＋ Neue Rechnung</button></div>
+ <div id="invoiceList"></div>
+</section>
+
+<section id="editor" class="screen">
+ <div class="row between" style="margin-bottom:12px"><button class="secondary" onclick="show('invoices')">‹ Zurück</button><button onclick="saveInvoice()">Speichern</button></div>
+ <div class="card">
+  <label>Rechnungsnummer</label><input id="invNo">
+  <div class="grid"><div><label>Rechnungsdatum</label><input id="invDate" type="date"></div><div><label>Fällig am</label><input id="invDue" type="date"></div></div>
+ </div>
+ <div class="card"><h3>Kunde</h3>
+  <label>Name / Firma</label><input id="custName">
+  <label>Straße</label><input id="custStreet">
+  <div class="grid"><div><label>PLZ</label><input id="custZip"></div><div><label>Ort</label><input id="custCity"></div></div>
+  <label>E-Mail</label><input id="custEmail" type="email">
+ </div>
+ <div class="card"><div class="row between"><h3>Positionen</h3><button onclick="addItem()">＋ Position</button></div><div id="items"></div></div>
+ <div class="card">
+  <label>Hinweis / Zahlungsinformation</label><textarea id="note" rows="4" placeholder="z.B. Bitte überweisen Sie den Betrag innerhalb von 14 Tagen."></textarea>
+ </div>
+ <div class="card">
+  <div class="row between"><span>Gesamtbetrag</span><span class="total" id="gross">0,00 €</span></div>
+  <p class="muted" style="font-size:13px">Keine Umsatzsteuer ausgewiesen (Kleinunternehmer).</p>
+  <button style="width:100%;margin-top:10px" onclick="makeInvoice()">📄 Rechnung anzeigen / PDF erstellen</button>
+ </div>
+</section>
+
+<section id="customers" class="screen">
+ <div class="row between" style="margin-bottom:12px"><strong>Kunden</strong><button onclick="newCustomer()">＋ Kunde</button></div>
+ <div id="customerList"></div>
+</section>
+
+<section id="settings" class="screen">
+ <div class="card"><h3>Meine Firmendaten</h3>
+  <label>Firmenname</label><input id="sName">
+  <label>Straße</label><input id="sStreet">
+  <div class="grid"><div><label>PLZ</label><input id="sZip"></div><div><label>Ort</label><input id="sCity"></div></div>
+  <label>Steuernummer</label><input id="sTax">
+  <label>E-Mail</label><input id="sEmail">
+  <label>Telefon</label><input id="sPhone">
+ </div>
+ <div class="card"><h3>Bankverbindung</h3>
+  <label>Bank</label><input id="sBank"><label>IBAN</label><input id="sIban"><label>BIC</label><input id="sBic">
+ </div>
+ <div class="card"><p><span class="badge">Kleinunternehmer</span></p><p class="muted">Die App weist standardmäßig keine Umsatzsteuer aus und verwendet den Hinweis „Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.“</p><button class="secondary" onclick="saveSettings()">Speichern</button></div>
+</section>
+</main>
+
+<nav>
+<button id="nInvoices" class="active" onclick="show('invoices')">🧾<br>Rechnungen</button>
+<button id="nCustomers" onclick="show('customers')">👥<br>Kunden</button>
+<button id="nSettings" onclick="show('settings')">⚙️<br>Einstellungen</button>
+</nav>
+
+<script>
+const KEY='rechnungsapp-v1';
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||{invoices:[],customers:[],settings:{name:'',street:'',zip:'',city:'',tax:'',email:'',phone:'',bank:'',iban:'',bic:''}};
+let current=null;
+
+const eur=n=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(Number(n)||0);
+const iso=d=>new Date(d).toISOString().slice(0,10);
+function persist(){localStorage.setItem(KEY,JSON.stringify(data))}
+function show(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+ if(id==='invoices'){document.getElementById('nInvoices').classList.add('active');renderInvoices()}
+ if(id==='customers'){document.getElementById('nCustomers').classList.add('active');renderCustomers()}
+ if(id==='settings'){document.getElementById('nSettings').classList.add('active');loadSettings()}
+}
+function nextNo(){let y=new Date().getFullYear(), nums=data.invoices.map(x=>parseInt((x.no||'').split('-').pop())||0);return `RE-${y}-${String(Math.max(0,...nums)+1).padStart(4,'0')}`}
+function newInvoice(){
+ current={id:crypto.randomUUID(),no:nextNo(),date:iso(new Date()),due:iso(Date.now()+14*86400000),customer:{name:'',street:'',zip:'',city:'',email:''},items:[{id:crypto.randomUUID(),desc:'',qty:1,price:0}],note:''};
+ fillEditor();show('editor')
+}
+function fillEditor(){
+ const i=current;[['invNo',i.no],['invDate',i.date],['invDue',i.due],['custName',i.customer.name],['custStreet',i.customer.street],['custZip',i.customer.zip],['custCity',i.customer.city],['custEmail',i.customer.email],['note',i.note]].forEach(([id,v])=>document.getElementById(id).value=v||'');
+ renderItems();
+}
+function saveInvoice(){
+ current.no=document.getElementById('invNo').value.trim();current.date=document.getElementById('invDate').value;current.due=document.getElementById('invDue').value;
+ current.customer={name:custName.value,street:custStreet.value,zip:custZip.value,city:custCity.value,email:custEmail.value};
+ current.note=note.value;
+ let idx=data.invoices.findIndex(x=>x.id===current.id);if(idx<0)data.invoices.unshift(current);else data.invoices[idx]=current;
+ persist();show('invoices');
+}
+function addItem(){current.items.push({id:crypto.randomUUID(),desc:'',qty:1,price:0});renderItems()}
+function renderItems(){
+ const el=document.getElementById('items');el.innerHTML='';
+ current.items.forEach((it,n)=>{
+  const d=document.createElement('div');d.className='item';
+  d.innerHTML=`<div class="itemgrid"><input placeholder="Beschreibung" value="${esc(it.desc)}"><input type="number" step="0.01" min="0" value="${it.qty}"><input type="number" step="0.01" min="0" value="${it.price}"></div><div class="row between" style="margin-top:8px"><span class="muted">${eur(it.qty*it.price)}</span><button class="danger" onclick="removeItem(${n})">Löschen</button></div>`;
+  const ins=d.querySelectorAll('input');ins[0].oninput=e=>{it.desc=e.target.value;updateTotal()};ins[1].oninput=e=>{it.qty=+e.target.value||0;updateTotal()};ins[2].oninput=e=>{it.price=+e.target.value||0;updateTotal()};
+  el.appendChild(d)
+ });updateTotal()
+}
+function removeItem(n){current.items.splice(n,1);renderItems()}
+function updateTotal(){document.getElementById('gross').textContent=eur(current?current.items.reduce((s,x)=>s+x.qty*x.price,0):0)}
+function renderInvoices(){
+ const el=document.getElementById('invoiceList');el.innerHTML='';
+ if(!data.invoices.length){el.innerHTML='<div class="card empty">Noch keine Rechnungen.<br>Tippe auf „Neue Rechnung“.</div>';return}
+ data.invoices.forEach(i=>{
+  const total=i.items.reduce((s,x)=>s+x.qty*x.price,0),d=document.createElement('div');d.className='card';
+  d.innerHTML=`<div class="row between"><strong>${esc(i.no)}</strong><span class="badge">${eur(total)}</span></div><div>${esc(i.customer.name||'Kein Kunde')}</div><div class="muted" style="font-size:13px">${formatDate(i.date)}</div><div class="row" style="margin-top:10px"><button onclick="editInvoice('${i.id}')">Bearbeiten</button><button class="secondary" onclick="printInvoice('${i.id}')">PDF / Drucken</button><button class="danger" onclick="deleteInvoice('${i.id}')">Löschen</button></div>`;
+  el.appendChild(d)
+ })
+}
+function editInvoice(id){current=JSON.parse(JSON.stringify(data.invoices.find(x=>x.id===id)));fillEditor();show('editor')}
+function deleteInvoice(id){if(confirm('Rechnung wirklich löschen?')){data.invoices=data.invoices.filter(x=>x.id!==id);persist();renderInvoices()}}
+function newCustomer(){
+ const name=prompt('Name / Firma:');if(!name)return;const street=prompt('Straße:')||'',zip=prompt('PLZ:')||'',city=prompt('Ort:')||'',email=prompt('E-Mail:')||'';
+ data.customers.push({id:crypto.randomUUID(),name,street,zip,city,email});persist();renderCustomers()
+}
+function renderCustomers(){
+ const el=document.getElementById('customerList');el.innerHTML='';
+ if(!data.customers.length){el.innerHTML='<div class="card empty">Noch keine Kunden.</div>';return}
+ data.customers.forEach(c=>{let d=document.createElement('div');d.className='card';d.innerHTML=`<strong>${esc(c.name)}</strong><div>${esc(c.street)}</div><div>${esc(c.zip)} ${esc(c.city)}</div><div class="muted">${esc(c.email)}</div><button class="danger" style="margin-top:8px" onclick="data.customers=data.customers.filter(x=>x.id!=='${c.id}');persist();renderCustomers()">Löschen</button>`;el.appendChild(d)})
+}
+function loadSettings(){let s=data.settings;[['sName',s.name],['sStreet',s.street],['sZip',s.zip],['sCity',s.city],['sTax',s.tax],['sEmail',s.email],['sPhone',s.phone],['sBank',s.bank],['sIban',s.iban],['sBic',s.bic]].forEach(([id,v])=>document.getElementById(id).value=v||'')}
+function saveSettings(){data.settings={name:sName.value,street:sStreet.value,zip:sZip.value,city:sCity.value,tax:sTax.value,email:sEmail.value,phone:sPhone.value,bank:sBank.value,iban:sIban.value,bic:sBic.value};persist();alert('Gespeichert.')}
+function printInvoice(id){
+ const i=data.invoices.find(x=>x.id===id),s=data.settings,total=i.items.reduce((a,x)=>a+x.qty*x.price,0);
+ const rows=i.items.map(x=>`<tr><td>${esc(x.desc)}</td><td>${x.qty}</td><td>${eur(x.price)}</td><td>${eur(x.qty*x.price)}</td></tr>`).join('');
+ const w=window.open('','_blank');if(!w){alert('Bitte Pop-ups erlauben.');return}
+ w.document.write(`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${esc(i.no)}</title><style>body{font-family:Arial;margin:50px;color:#111}header{display:flex;justify-content:space-between}h1{font-size:28px}table{width:100%;border-collapse:collapse;margin-top:35px}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}td:nth-child(n+2),th:nth-child(n+2){text-align:right}.sum{margin-left:auto;width:260px;margin-top:25px}.sum div{display:flex;justify-content:space-between;padding:5px}.total{font-size:18px;font-weight:bold;border-top:2px solid #111;margin-top:5px}.foot{margin-top:70px;font-size:12px;color:#555}@media print{button{display:none}}</style></head><body><header><div><strong>${esc(s.name)}</strong><br>${esc(s.street)}<br>${esc(s.zip)} ${esc(s.city)}<br>${esc(s.email)}<br>${esc(s.phone)}</div><div><h1>RECHNUNG</h1>Nr.: ${esc(i.no)}<br>Datum: ${formatDate(i.date)}<br>Fällig: ${formatDate(i.due)}</div></header><h3 style="margin-top:55px">Rechnung an</h3>${esc(i.customer.name)}<br>${esc(i.customer.street)}<br>${esc(i.customer.zip)} ${esc(i.customer.city)}<br><table><thead><tr><th>Leistung</th><th>Menge</th><th>Einzelpreis</th><th>Gesamt</th></tr></thead><tbody>${rows}</tbody></table><div class="sum"><div><span>Gesamtbetrag</span><span>${eur(total)}</span></div></div><p style="margin-top:35px">${esc(i.note||'Bitte überweisen Sie den Rechnungsbetrag innerhalb der vereinbarten Zahlungsfrist.')}</p><p><strong>Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.</strong></p><div class="foot">${esc(s.bank)} · IBAN: ${esc(s.iban)} · BIC: ${esc(s.bic)}<br>Steuernummer: ${esc(s.tax)}</div><button onclick="window.print()">Als PDF speichern / Drucken</button></body></html>`);w.document.close()
+}
+function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function formatDate(x){if(!x)return'';return new Date(x+'T12:00:00').toLocaleDateString('de-DE')}
+renderInvoices();
+</script>
+</body></html>
