@@ -1,161 +1,144 @@
 <!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
-<title>Meine Rechnungen</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172033"><title>Meine Rechnungen V2</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif;background:#f3f4f6;color:#111827}
-header{background:#111827;color:white;padding:18px 16px calc(14px + env(safe-area-inset-top));position:sticky;top:0;z-index:5}
-h1{margin:0;font-size:22px}.sub{opacity:.7;font-size:13px;margin-top:3px}
-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;display:flex;padding:7px 4px calc(7px + env(safe-area-inset-bottom));z-index:10}
-nav button{flex:1;border:0;background:none;padding:8px 2px;color:#6b7280;font-size:11px}nav button.active{color:#111827;font-weight:700}
-main{max-width:760px;margin:auto;padding:16px 14px 100px}.screen{display:none}.screen.active{display:block}
-.card{background:white;border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 1px 4px #0000000c}
-button,.btn{border:0;border-radius:12px;padding:12px 15px;background:#111827;color:white;font-size:15px;font-weight:600}
-button.secondary{background:#e5e7eb;color:#111827}.danger{background:#fee2e2!important;color:#991b1b!important}
-.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}
-input,textarea,select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;font-size:16px;background:white}
-label{display:block;font-size:13px;color:#6b7280;margin:10px 0 5px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.item{border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin:9px 0}.itemgrid{display:grid;grid-template-columns:1fr 80px 110px;gap:8px}
-.total{font-size:18px;font-weight:800}.muted{color:#6b7280}.empty{text-align:center;padding:35px 10px;color:#6b7280}
-.badge{font-size:11px;background:#dcfce7;color:#166534;border-radius:99px;padding:4px 8px}
-@media(max-width:520px){.itemgrid{grid-template-columns:1fr 70px 95px}.grid{grid-template-columns:1fr}}
+:root{--accent:#172033;--paper:#fff;--fs:11px}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f2f4f7;color:#15171a}
+header{background:var(--accent);color:#fff;padding:16px 16px 14px;position:sticky;top:0;z-index:20}header h1{font-size:21px;margin:0}.small{font-size:12px;color:#6b7280}.whiteSmall{font-size:12px;opacity:.72}
+main{max-width:960px;margin:auto;padding:14px 12px 100px}.screen{display:none}.screen.active{display:block}.card{background:#fff;border-radius:15px;padding:14px;margin-bottom:12px;box-shadow:0 1px 5px #0000000c}
+.row{display:flex;align-items:center;gap:8px}.between{justify-content:space-between}.wrap{flex-wrap:wrap}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+button,.button{border:0;border-radius:10px;background:var(--accent);color:#fff;padding:10px 13px;font-weight:700;font-size:14px}.secondary{background:#e8ebef!important;color:#15171a!important}.danger{background:#fee2e2!important;color:#991b1b!important}.success{background:#dcfce7!important;color:#166534!important}
+input,select,textarea{width:100%;border:1px solid #d3d7dd;border-radius:9px;padding:10px;font-size:16px;background:#fff}label{display:block;font-size:12px;color:#667085;margin:9px 0 4px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;overflow-x:auto;background:#fff;border-top:1px solid #ddd;padding:5px 3px calc(5px + env(safe-area-inset-bottom));z-index:30}nav button{min-width:70px;flex:1;background:transparent;color:#6b7280;padding:6px 3px;font-size:10px}nav button.active{color:var(--accent)}
+.kpi{font-size:25px;font-weight:800}.badge{display:inline-block;border-radius:99px;padding:4px 8px;font-size:11px;font-weight:700}.open{background:#fef3c7;color:#92400e}.paid{background:#dcfce7;color:#166534}.overdue{background:#fee2e2;color:#991b1b}
+.item{border:1px solid #e5e7eb;border-radius:11px;padding:10px;margin:8px 0}.itemgrid{display:grid;grid-template-columns:1fr 75px 90px;gap:7px}
+.invoice-paper{background:var(--paper);width:210mm;min-height:297mm;margin:12px auto;padding:17mm 17mm 15mm;box-shadow:0 2px 16px #0002;font-family:Arial,sans-serif;font-size:var(--fs)}
+.invoice-head{display:flex;justify-content:space-between;gap:20px}.invoice-logo{max-width:170px;max-height:90px;object-fit:contain}.company-block{line-height:1.35}.senderline{font-size:8px;border-bottom:1px solid #aaa;padding-bottom:3px;margin-bottom:14px}.invoice-title{font-size:27px;margin:0 0 30px;font-weight:500}
+.meta{border-collapse:collapse;width:100%;margin-top:35px}.meta th,.meta td{border:1px solid #555;padding:5px;text-align:center}
+.pos{width:100%;border-collapse:collapse;margin-top:10px}.pos th{font-weight:400;border-bottom:1px solid #333;padding:5px 3px;text-align:left}.pos td{padding:7px 3px;border-bottom:1px solid #ddd}.right{text-align:right!important}
+.totalLine{text-align:right;font-size:15px;font-weight:800;border-bottom:3px double #222;padding:8px 3px}.invoiceNotes{line-height:1.65;margin-top:20px}.thank{text-align:center;font-size:16px;font-weight:800;margin-top:110px}
+.colorrow{display:flex;gap:8px;align-items:center}.colorrow input[type=color]{width:60px;height:42px;padding:2px}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}.itemgrid{grid-template-columns:1fr 65px 90px}.invoice-paper{width:100%;min-height:auto;padding:20px}.thank{margin-top:60px}.invoice-logo{max-width:120px}.invoice-title{font-size:23px}}
+@media print{header,nav,.noPrint{display:none!important}body{background:#fff}.screen{display:none!important}#preview{display:block!important}.invoice-paper{box-shadow:none;margin:0;width:210mm;min-height:297mm}}
 </style>
+
+<link rel="icon" type="image/jpeg" href="firmenlogo.jpeg">
+<link rel="apple-touch-icon" href="firmenlogo.jpeg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Meine Rechnungen">
+
 </head>
 <body>
-<header><h1>Meine Rechnungen</h1><div class="sub">Kleinunternehmer · keine MwSt. ausgewiesen</div></header>
-
+<header><h1>Meine Rechnungen</h1><div class="whiteSmall">Kleinunternehmer · Version 2</div></header>
 <main>
-<section id="invoices" class="screen active">
- <div class="row between" style="margin-bottom:12px"><strong>Rechnungen</strong><button onclick="newInvoice()">＋ Neue Rechnung</button></div>
+<section id="dashboard" class="screen active">
+ <div class="grid3">
+  <div class="card"><div class="small">Umsatz gesamt</div><div class="kpi" id="kRevenue">0 €</div></div>
+  <div class="card"><div class="small">Offen</div><div class="kpi" id="kOpen">0 €</div></div>
+  <div class="card"><div class="small">Überfällig</div><div class="kpi" id="kOverdue">0</div></div>
+ </div>
+ <div class="card"><div class="row between"><strong>Letzte Rechnungen</strong><button onclick="newInvoice()">＋ Neue Rechnung</button></div><div id="recent"></div></div>
+</section>
+
+<section id="invoices" class="screen">
+ <div class="card"><div class="row"><input id="searchInv" placeholder="🔎 Rechnung oder Kunde suchen" oninput="renderInvoices()"><button onclick="newInvoice()">＋ Neu</button></div></div>
  <div id="invoiceList"></div>
 </section>
 
 <section id="editor" class="screen">
- <div class="row between" style="margin-bottom:12px"><button class="secondary" onclick="show('invoices')">‹ Zurück</button><button onclick="saveInvoice()">Speichern</button></div>
- <div class="card">
-  <label>Rechnungsnummer</label><input id="invNo">
-  <div class="grid"><div><label>Rechnungsdatum</label><input id="invDate" type="date"></div><div><label>Fällig am</label><input id="invDue" type="date"></div></div>
+ <div class="row between noPrint" style="margin-bottom:10px"><button class="secondary" onclick="show('invoices')">‹ Zurück</button><button onclick="saveInvoice()">Speichern</button></div>
+ <div class="card"><h3>Rechnungsdaten</h3><div class="grid3">
+  <div><label>Kunden-Nr.</label><input id="eCustomerNo"></div><div><label>Rechnungs-Nr.</label><input id="eNo"></div><div><label>Datum</label><input id="eDate" type="date"></div>
+ </div><div class="grid2"><div><label>Fällig am</label><input id="eDue" type="date"></div><div><label>Status</label><select id="eStatus"><option value="open">Offen</option><option value="paid">Bezahlt</option></select></div></div>
+ <label>Kunde auswählen</label><select id="eCustomerSelect" onchange="selectCustomer(this.value)"><option value="">– Kunde wählen –</option></select>
  </div>
- <div class="card"><h3>Kunde</h3>
-  <label>Name / Firma</label><input id="custName">
-  <label>Straße</label><input id="custStreet">
-  <div class="grid"><div><label>PLZ</label><input id="custZip"></div><div><label>Ort</label><input id="custCity"></div></div>
-  <label>E-Mail</label><input id="custEmail" type="email">
- </div>
- <div class="card"><div class="row between"><h3>Positionen</h3><button onclick="addItem()">＋ Position</button></div><div id="items"></div></div>
- <div class="card">
-  <label>Hinweis / Zahlungsinformation</label><textarea id="note" rows="4" placeholder="z.B. Bitte überweisen Sie den Betrag innerhalb von 14 Tagen."></textarea>
- </div>
- <div class="card">
-  <div class="row between"><span>Gesamtbetrag</span><span class="total" id="gross">0,00 €</span></div>
-  <p class="muted" style="font-size:13px">Keine Umsatzsteuer ausgewiesen (Kleinunternehmer).</p>
-  <button style="width:100%;margin-top:10px" onclick="makeInvoice()">📄 Rechnung anzeigen / PDF erstellen</button>
- </div>
+ <div class="card"><h3>Kundendaten</h3><label>Name / Firma</label><input id="eName"><label>Straße</label><input id="eStreet"><div class="grid2"><div><label>PLZ</label><input id="eZip"></div><div><label>Ort</label><input id="eCity"></div></div></div>
+ <div class="card"><div class="row between"><h3>Positionen</h3><button onclick="addItem()">＋ Position</button></div><label>Gespeicherte Leistung hinzufügen</label><select id="servicePick" onchange="pickService(this.value)"><option value="">– Leistung wählen –</option></select><div id="editItems"></div></div>
+ <div class="card"><label>Text unter der Rechnung</label><textarea id="eNote" rows="5"></textarea><div class="row between" style="margin-top:12px"><strong>Gesamtbetrag</strong><strong id="eTotal">0,00 €</strong></div></div>
+ <div class="card"><button style="width:100%" onclick="saveInvoice();openPreview(current.id)">📄 Vorschau / PDF</button></div>
 </section>
 
 <section id="customers" class="screen">
- <div class="row between" style="margin-bottom:12px"><strong>Kunden</strong><button onclick="newCustomer()">＋ Kunde</button></div>
- <div id="customerList"></div>
+ <div class="row between" style="margin-bottom:10px"><strong>Kunden</strong><button onclick="customerDialog()">＋ Kunde</button></div><div id="customerList"></div>
+</section>
+
+<section id="services" class="screen">
+ <div class="row between" style="margin-bottom:10px"><strong>Leistungen / Artikel</strong><button onclick="serviceDialog()">＋ Leistung</button></div><div id="serviceList"></div>
+</section>
+
+<section id="design" class="screen">
+ <div class="card"><h3>Rechnungsdesign</h3>
+  <label>Vorlagenname</label><input id="dTemplate">
+  <label>Überschrift</label><input id="dTitle">
+  <div class="grid2"><div><label>Schriftgröße</label><select id="dFont"><option value="10">Klein</option><option value="11">Normal</option><option value="12">Groß</option></select></div><div><label>Logo-Position</label><select id="dLogoPos"><option value="right">Rechts</option><option value="left">Links</option></select></div></div>
+  <label>Akzentfarbe</label><div class="colorrow"><input id="dColor" type="color"><span class="small">Farbe der App/Schaltflächen</span></div>
+  <label>Logo hochladen</label><input id="dLogo" type="file" accept="image/*" onchange="uploadLogo(this)">
+  <label><input id="dThanksOn" type="checkbox" style="width:auto"> „Vielen Dank für Ihren Auftrag!“ anzeigen</label>
+  <label>Dankestext</label><input id="dThanks">
+  <label>§19-Hinweis</label><textarea id="dTaxText" rows="3"></textarea>
+  <button onclick="saveDesign()">Design speichern</button> <button class="secondary" onclick="designPreview()">Live-Vorschau</button>
+ </div>
+ <div id="designMini"></div>
 </section>
 
 <section id="settings" class="screen">
- <div class="card"><h3>Meine Firmendaten</h3>
-  <label>Firmenname</label><input id="sName">
-  <label>Straße</label><input id="sStreet">
-  <div class="grid"><div><label>PLZ</label><input id="sZip"></div><div><label>Ort</label><input id="sCity"></div></div>
-  <label>Steuernummer</label><input id="sTax">
-  <label>E-Mail</label><input id="sEmail">
-  <label>Telefon</label><input id="sPhone">
- </div>
- <div class="card"><h3>Bankverbindung</h3>
-  <label>Bank</label><input id="sBank"><label>IBAN</label><input id="sIban"><label>BIC</label><input id="sBic">
- </div>
- <div class="card"><p><span class="badge">Kleinunternehmer</span></p><p class="muted">Die App weist standardmäßig keine Umsatzsteuer aus und verwendet den Hinweis „Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.“</p><button class="secondary" onclick="saveSettings()">Speichern</button></div>
+ <div class="card"><h3>Firmendaten</h3><label>Firmenname</label><input id="sName"><label>Straße</label><input id="sStreet"><div class="grid2"><div><label>PLZ</label><input id="sZip"></div><div><label>Ort</label><input id="sCity"></div></div><label>Telefon</label><input id="sPhone"><label>E-Mail</label><input id="sEmail"><label>Steuernummer</label><input id="sTax"><label>USt-IdNr.</label><input id="sVat"><label>Bank</label><input id="sBank"><label>IBAN</label><input id="sIban"><label>BIC</label><input id="sBic"><button onclick="saveSettings()">Firmendaten speichern</button></div>
+ <div class="card"><h3>Datensicherung</h3><p class="small">Exportiere regelmäßig eine Sicherung. Darin sind Rechnungen, Kunden, Leistungen, Einstellungen und Design enthalten.</p><button onclick="backup()">⬇️ Sicherung exportieren</button><label>Sicherung wiederherstellen</label><input type="file" accept=".json,application/json" onchange="restore(this)"></div>
 </section>
+
+<section id="preview" class="screen"><div class="row noPrint" style="justify-content:center;margin-bottom:10px"><button class="secondary" onclick="show('invoices')">‹ Zurück</button><button onclick="window.print()">🖨️ Drucken / als PDF</button></div><div id="paper"></div></section>
 </main>
 
 <nav>
-<button id="nInvoices" class="active" onclick="show('invoices')">🧾<br>Rechnungen</button>
-<button id="nCustomers" onclick="show('customers')">👥<br>Kunden</button>
-<button id="nSettings" onclick="show('settings')">⚙️<br>Einstellungen</button>
+<button data-s="dashboard" class="active" onclick="show('dashboard')">📊<br>Übersicht</button>
+<button data-s="invoices" onclick="show('invoices')">🧾<br>Rechnungen</button>
+<button data-s="customers" onclick="show('customers')">👥<br>Kunden</button>
+<button data-s="services" onclick="show('services')">📦<br>Leistungen</button>
+<button data-s="design" onclick="show('design')">🎨<br>Design</button>
+<button data-s="settings" onclick="show('settings')">⚙️<br>Mehr</button>
 </nav>
-
 <script>
-const KEY='rechnungsapp-v1';
-let data=JSON.parse(localStorage.getItem(KEY)||'null')||{invoices:[],customers:[],settings:{name:'',street:'',zip:'',city:'',tax:'',email:'',phone:'',bank:'',iban:'',bic:''}};
-let current=null;
-
-const eur=n=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(Number(n)||0);
-const iso=d=>new Date(d).toISOString().slice(0,10);
+const KEY='meine-rechnungen-v2';
+const defaults={invoices:[],customers:[],services:[],settings:{name:'Meine Firma',street:'',zip:'',city:'',phone:'',email:'',tax:'',vat:'',bank:'',iban:'',bic:''},design:{template:'Meine Vorlage',title:'RECHNUNG',font:11,logoPos:'right',color:'#172033',logo:'firmenlogo.jpeg',thanksOn:true,thanks:'• Vielen Dank für Ihren Auftrag! •',taxText:'Der Rechnungsbetrag enthält laut § 19 UStG (Abs. 1) keine Umsatzsteuer.'}};
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||defaults,current=null;
+for(const k of Object.keys(defaults)) if(data[k]===undefined)data[k]=defaults[k];
+const $=id=>document.getElementById(id), eur=n=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(+n||0), today=()=>new Date().toISOString().slice(0,10), esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])), fmt=x=>x?new Date(x+'T12:00:00').toLocaleDateString('de-DE'):'';
 function persist(){localStorage.setItem(KEY,JSON.stringify(data))}
-function show(id){
- document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
- document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
- if(id==='invoices'){document.getElementById('nInvoices').classList.add('active');renderInvoices()}
- if(id==='customers'){document.getElementById('nCustomers').classList.add('active');renderCustomers()}
- if(id==='settings'){document.getElementById('nSettings').classList.add('active');loadSettings()}
-}
-function nextNo(){let y=new Date().getFullYear(), nums=data.invoices.map(x=>parseInt((x.no||'').split('-').pop())||0);return `RE-${y}-${String(Math.max(0,...nums)+1).padStart(4,'0')}`}
-function newInvoice(){
- current={id:crypto.randomUUID(),no:nextNo(),date:iso(new Date()),due:iso(Date.now()+14*86400000),customer:{name:'',street:'',zip:'',city:'',email:''},items:[{id:crypto.randomUUID(),desc:'',qty:1,price:0}],note:''};
- fillEditor();show('editor')
-}
-function fillEditor(){
- const i=current;[['invNo',i.no],['invDate',i.date],['invDue',i.due],['custName',i.customer.name],['custStreet',i.customer.street],['custZip',i.customer.zip],['custCity',i.customer.city],['custEmail',i.customer.email],['note',i.note]].forEach(([id,v])=>document.getElementById(id).value=v||'');
- renderItems();
-}
-function saveInvoice(){
- current.no=document.getElementById('invNo').value.trim();current.date=document.getElementById('invDate').value;current.due=document.getElementById('invDue').value;
- current.customer={name:custName.value,street:custStreet.value,zip:custZip.value,city:custCity.value,email:custEmail.value};
- current.note=note.value;
- let idx=data.invoices.findIndex(x=>x.id===current.id);if(idx<0)data.invoices.unshift(current);else data.invoices[idx]=current;
- persist();show('invoices');
-}
-function addItem(){current.items.push({id:crypto.randomUUID(),desc:'',qty:1,price:0});renderItems()}
-function renderItems(){
- const el=document.getElementById('items');el.innerHTML='';
- current.items.forEach((it,n)=>{
-  const d=document.createElement('div');d.className='item';
-  d.innerHTML=`<div class="itemgrid"><input placeholder="Beschreibung" value="${esc(it.desc)}"><input type="number" step="0.01" min="0" value="${it.qty}"><input type="number" step="0.01" min="0" value="${it.price}"></div><div class="row between" style="margin-top:8px"><span class="muted">${eur(it.qty*it.price)}</span><button class="danger" onclick="removeItem(${n})">Löschen</button></div>`;
-  const ins=d.querySelectorAll('input');ins[0].oninput=e=>{it.desc=e.target.value;updateTotal()};ins[1].oninput=e=>{it.qty=+e.target.value||0;updateTotal()};ins[2].oninput=e=>{it.price=+e.target.value||0;updateTotal()};
-  el.appendChild(d)
- });updateTotal()
-}
-function removeItem(n){current.items.splice(n,1);renderItems()}
-function updateTotal(){document.getElementById('gross').textContent=eur(current?current.items.reduce((s,x)=>s+x.qty*x.price,0):0)}
-function renderInvoices(){
- const el=document.getElementById('invoiceList');el.innerHTML='';
- if(!data.invoices.length){el.innerHTML='<div class="card empty">Noch keine Rechnungen.<br>Tippe auf „Neue Rechnung“.</div>';return}
- data.invoices.forEach(i=>{
-  const total=i.items.reduce((s,x)=>s+x.qty*x.price,0),d=document.createElement('div');d.className='card';
-  d.innerHTML=`<div class="row between"><strong>${esc(i.no)}</strong><span class="badge">${eur(total)}</span></div><div>${esc(i.customer.name||'Kein Kunde')}</div><div class="muted" style="font-size:13px">${formatDate(i.date)}</div><div class="row" style="margin-top:10px"><button onclick="editInvoice('${i.id}')">Bearbeiten</button><button class="secondary" onclick="printInvoice('${i.id}')">PDF / Drucken</button><button class="danger" onclick="deleteInvoice('${i.id}')">Löschen</button></div>`;
-  el.appendChild(d)
- })
-}
-function editInvoice(id){current=JSON.parse(JSON.stringify(data.invoices.find(x=>x.id===id)));fillEditor();show('editor')}
-function deleteInvoice(id){if(confirm('Rechnung wirklich löschen?')){data.invoices=data.invoices.filter(x=>x.id!==id);persist();renderInvoices()}}
-function newCustomer(){
- const name=prompt('Name / Firma:');if(!name)return;const street=prompt('Straße:')||'',zip=prompt('PLZ:')||'',city=prompt('Ort:')||'',email=prompt('E-Mail:')||'';
- data.customers.push({id:crypto.randomUUID(),name,street,zip,city,email});persist();renderCustomers()
-}
-function renderCustomers(){
- const el=document.getElementById('customerList');el.innerHTML='';
- if(!data.customers.length){el.innerHTML='<div class="card empty">Noch keine Kunden.</div>';return}
- data.customers.forEach(c=>{let d=document.createElement('div');d.className='card';d.innerHTML=`<strong>${esc(c.name)}</strong><div>${esc(c.street)}</div><div>${esc(c.zip)} ${esc(c.city)}</div><div class="muted">${esc(c.email)}</div><button class="danger" style="margin-top:8px" onclick="data.customers=data.customers.filter(x=>x.id!=='${c.id}');persist();renderCustomers()">Löschen</button>`;el.appendChild(d)})
-}
-function loadSettings(){let s=data.settings;[['sName',s.name],['sStreet',s.street],['sZip',s.zip],['sCity',s.city],['sTax',s.tax],['sEmail',s.email],['sPhone',s.phone],['sBank',s.bank],['sIban',s.iban],['sBic',s.bic]].forEach(([id,v])=>document.getElementById(id).value=v||'')}
-function saveSettings(){data.settings={name:sName.value,street:sStreet.value,zip:sZip.value,city:sCity.value,tax:sTax.value,email:sEmail.value,phone:sPhone.value,bank:sBank.value,iban:sIban.value,bic:sBic.value};persist();alert('Gespeichert.')}
-function printInvoice(id){
- const i=data.invoices.find(x=>x.id===id),s=data.settings,total=i.items.reduce((a,x)=>a+x.qty*x.price,0);
- const rows=i.items.map(x=>`<tr><td>${esc(x.desc)}</td><td>${x.qty}</td><td>${eur(x.price)}</td><td>${eur(x.qty*x.price)}</td></tr>`).join('');
- const w=window.open('','_blank');if(!w){alert('Bitte Pop-ups erlauben.');return}
- w.document.write(`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${esc(i.no)}</title><style>body{font-family:Arial;margin:50px;color:#111}header{display:flex;justify-content:space-between}h1{font-size:28px}table{width:100%;border-collapse:collapse;margin-top:35px}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}td:nth-child(n+2),th:nth-child(n+2){text-align:right}.sum{margin-left:auto;width:260px;margin-top:25px}.sum div{display:flex;justify-content:space-between;padding:5px}.total{font-size:18px;font-weight:bold;border-top:2px solid #111;margin-top:5px}.foot{margin-top:70px;font-size:12px;color:#555}@media print{button{display:none}}</style></head><body><header><div><strong>${esc(s.name)}</strong><br>${esc(s.street)}<br>${esc(s.zip)} ${esc(s.city)}<br>${esc(s.email)}<br>${esc(s.phone)}</div><div><h1>RECHNUNG</h1>Nr.: ${esc(i.no)}<br>Datum: ${formatDate(i.date)}<br>Fällig: ${formatDate(i.due)}</div></header><h3 style="margin-top:55px">Rechnung an</h3>${esc(i.customer.name)}<br>${esc(i.customer.street)}<br>${esc(i.customer.zip)} ${esc(i.customer.city)}<br><table><thead><tr><th>Leistung</th><th>Menge</th><th>Einzelpreis</th><th>Gesamt</th></tr></thead><tbody>${rows}</tbody></table><div class="sum"><div><span>Gesamtbetrag</span><span>${eur(total)}</span></div></div><p style="margin-top:35px">${esc(i.note||'Bitte überweisen Sie den Rechnungsbetrag innerhalb der vereinbarten Zahlungsfrist.')}</p><p><strong>Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.</strong></p><div class="foot">${esc(s.bank)} · IBAN: ${esc(s.iban)} · BIC: ${esc(s.bic)}<br>Steuernummer: ${esc(s.tax)}</div><button onclick="window.print()">Als PDF speichern / Drucken</button></body></html>`);w.document.close()
-}
-function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function formatDate(x){if(!x)return'';return new Date(x+'T12:00:00').toLocaleDateString('de-DE')}
-renderInvoices();
-</script>
-</body></html>
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.s===id));if(id==='dashboard')renderDashboard();if(id==='invoices')renderInvoices();if(id==='customers')renderCustomers();if(id==='services')renderServices();if(id==='design')loadDesign();if(id==='settings')loadSettings()}
+function statusOf(i){if(i.status==='paid')return'paid';return i.due&&i.due<today()?'overdue':'open'} function statusText(s){return s==='paid'?'Bezahlt':s==='overdue'?'Überfällig':'Offen'} function total(i){return i.items.reduce((a,x)=>a+(+x.qty||0)*(+x.price||0),0)}
+function renderDashboard(){let rev=data.invoices.reduce((a,i)=>a+total(i),0),open=data.invoices.filter(i=>statusOf(i)!=='paid').reduce((a,i)=>a+total(i),0),od=data.invoices.filter(i=>statusOf(i)==='overdue').length;$('kRevenue').textContent=eur(rev);$('kOpen').textContent=eur(open);$('kOverdue').textContent=od;$('recent').innerHTML=data.invoices.slice(0,5).map(cardInvoice).join('')||'<p class="small">Noch keine Rechnungen.</p>'}
+function cardInvoice(i){let s=statusOf(i);return `<div class="item"><div class="row between"><strong>Rechnung ${esc(i.no)}</strong><span class="badge ${s}">${statusText(s)}</span></div><div>${esc(i.customer.name||'Kein Kunde')}</div><div class="row between"><span class="small">${fmt(i.date)}</span><strong>${eur(total(i))}</strong></div></div>`}
+function renderInvoices(){let q=($('searchInv')?.value||'').toLowerCase(),arr=data.invoices.filter(i=>(i.no+' '+i.customer.name).toLowerCase().includes(q));$('invoiceList').innerHTML=arr.map(i=>{let s=statusOf(i);return `<div class="card"><div class="row between"><div><strong>Rechnung ${esc(i.no)}</strong><br><span class="small">${esc(i.customer.name)} · ${fmt(i.date)}</span></div><div><span class="badge ${s}">${statusText(s)}</span><br><strong>${eur(total(i))}</strong></div></div><div class="row wrap" style="margin-top:10px"><button onclick="editInvoice('${i.id}')">Bearbeiten</button><button class="secondary" onclick="copyInvoice('${i.id}')">Kopieren</button><button class="secondary" onclick="openPreview('${i.id}')">PDF</button><button class="${i.status==='paid'?'secondary':'success'}" onclick="togglePaid('${i.id}')">${i.status==='paid'?'Auf offen':'Als bezahlt'}</button><button class="danger" onclick="deleteInvoice('${i.id}')">Löschen</button></div></div>`}).join('')||'<div class="card small">Keine Rechnungen gefunden.</div>'}
+function nextNo(){let nums=data.invoices.map(i=>parseInt(String(i.no).match(/\d+$/)?.[0]||0));return String(Math.max(0,...nums)+1)}
+function newInvoice(){current={id:crypto.randomUUID(),customerNo:'',no:nextNo(),date:today(),due:new Date(Date.now()+14*864e5).toISOString().slice(0,10),status:'open',paidDate:'',customer:{name:'',street:'',zip:'',city:''},items:[{id:crypto.randomUUID(),article:'',desc:'',unit:'Std.',qty:1,price:0}],note:'Die Rechnung ist nach der Ausstellung zu zahlen.\\n\\nBitte geben Sie im Verwendungszweck Ihren Namen und die Rechnungsnummer an.\\n\\nIch bedanke mich für den Auftrag und freue mich auf eine weitere Zusammenarbeit.'};fillEditor();show('editor')}
+function fillEditor(){let i=current;$('eCustomerNo').value=i.customerNo||'';$('eNo').value=i.no;$('eDate').value=i.date;$('eDue').value=i.due;$('eStatus').value=i.status||'open';$('eName').value=i.customer.name;$('eStreet').value=i.customer.street;$('eZip').value=i.customer.zip;$('eCity').value=i.customer.city;$('eNote').value=i.note||'';fillSelects();renderEditItems()}
+function fillSelects(){$('eCustomerSelect').innerHTML='<option value="">– Kunde wählen –</option>'+data.customers.map(c=>`<option value="${c.id}">${esc(c.no||'')} ${esc(c.name)}</option>`).join('');$('servicePick').innerHTML='<option value="">– Leistung wählen –</option>'+data.services.map(s=>`<option value="${s.id}">${esc(s.article)} ${esc(s.name)} · ${eur(s.price)}/${esc(s.unit)}</option>`).join('')}
+function readEditor(){current.customerNo=$('eCustomerNo').value;current.no=$('eNo').value;current.date=$('eDate').value;current.due=$('eDue').value;current.status=$('eStatus').value;current.customer={name:$('eName').value,street:$('eStreet').value,zip:$('eZip').value,city:$('eCity').value};current.note=$('eNote').value}
+function saveInvoice(){readEditor();let x=data.invoices.findIndex(i=>i.id===current.id);if(x<0)data.invoices.unshift(current);else data.invoices[x]=current;persist()}
+function editInvoice(id){current=JSON.parse(JSON.stringify(data.invoices.find(i=>i.id===id)));fillEditor();show('editor')}
+function copyInvoice(id){let src=JSON.parse(JSON.stringify(data.invoices.find(i=>i.id===id)));src.id=crypto.randomUUID();src.no=nextNo();src.date=today();src.due=new Date(Date.now()+14*864e5).toISOString().slice(0,10);src.status='open';src.paidDate='';src.items.forEach(x=>x.id=crypto.randomUUID());current=src;fillEditor();show('editor')}
+function deleteInvoice(id){if(confirm('Rechnung wirklich löschen?')){data.invoices=data.invoices.filter(i=>i.id!==id);persist();renderInvoices()}}
+function togglePaid(id){let i=data.invoices.find(x=>x.id===id);i.status=i.status==='paid'?'open':'paid';i.paidDate=i.status==='paid'?today():'';persist();renderInvoices()}
+function selectCustomer(id){let c=data.customers.find(x=>x.id===id);if(!c)return;$('eCustomerNo').value=c.no||'';$('eName').value=c.name;$('eStreet').value=c.street;$('eZip').value=c.zip;$('eCity').value=c.city}
+function addItem(){current.items.push({id:crypto.randomUUID(),article:'',desc:'',unit:'',qty:1,price:0});renderEditItems()}
+function pickService(id){let s=data.services.find(x=>x.id===id);if(!s)return;current.items.push({id:crypto.randomUUID(),article:s.article,desc:s.name,unit:s.unit,qty:1,price:+s.price});$('servicePick').value='';renderEditItems()}
+function renderEditItems(){$('editItems').innerHTML=current.items.map((x,n)=>`<div class="item"><input placeholder="Bezeichnung" value="${esc(x.desc)}" oninput="current.items[${n}].desc=this.value"><div class="itemgrid" style="margin-top:7px"><input placeholder="Einheit" value="${esc(x.unit)}" oninput="current.items[${n}].unit=this.value"><input type="number" step=".01" value="${x.qty}" oninput="current.items[${n}].qty=+this.value;updateEditTotal()"><input type="number" step=".01" value="${x.price}" oninput="current.items[${n}].price=+this.value;updateEditTotal()"></div><div class="row between" style="margin-top:7px"><input style="max-width:180px" placeholder="Artikel-Nr." value="${esc(x.article)}" oninput="current.items[${n}].article=this.value"><button class="danger" onclick="current.items.splice(${n},1);renderEditItems()">Löschen</button></div></div>`).join('');updateEditTotal()}
+function updateEditTotal(){$('eTotal').textContent=eur(total(current))}
+function customerDialog(){let name=prompt('Name / Firma:');if(!name)return;let no=prompt('Kundennummer:')||'',street=prompt('Straße:')||'',zip=prompt('PLZ:')||'',city=prompt('Ort:')||'',phone=prompt('Telefon:')||'',email=prompt('E-Mail:')||'';data.customers.push({id:crypto.randomUUID(),no,name,street,zip,city,phone,email});persist();renderCustomers()}
+function renderCustomers(){$('customerList').innerHTML=data.customers.map(c=>`<div class="card"><strong>${esc(c.name)}</strong> <span class="small">${esc(c.no)}</span><div>${esc(c.street)} · ${esc(c.zip)} ${esc(c.city)}</div><div class="small">${esc(c.phone)} ${esc(c.email)}</div><button class="danger" style="margin-top:8px" onclick="data.customers=data.customers.filter(x=>x.id!=='${c.id}');persist();renderCustomers()">Löschen</button></div>`).join('')||'<div class="card small">Noch keine Kunden.</div>'}
+function serviceDialog(){let name=prompt('Leistung / Artikel:');if(!name)return;let article=prompt('Artikel-Nr.:')||'',unit=prompt('Einheit (z.B. Std., ha, Stück):')||'Std.',price=parseFloat((prompt('Preis in Euro:')||'0').replace(',','.'))||0;data.services.push({id:crypto.randomUUID(),article,name,unit,price});persist();renderServices()}
+function renderServices(){$('serviceList').innerHTML=data.services.map(s=>`<div class="card"><div class="row between"><div><strong>${esc(s.name)}</strong><br><span class="small">${esc(s.article)} · ${esc(s.unit)}</span></div><strong>${eur(s.price)}</strong></div><button class="danger" style="margin-top:8px" onclick="data.services=data.services.filter(x=>x.id!=='${s.id}');persist();renderServices()">Löschen</button></div>`).join('')||'<div class="card small">Noch keine Leistungen.</div>'}
+function loadSettings(){let s=data.settings;[['sName','name'],['sStreet','street'],['sZip','zip'],['sCity','city'],['sPhone','phone'],['sEmail','email'],['sTax','tax'],['sVat','vat'],['sBank','bank'],['sIban','iban'],['sBic','bic']].forEach(([id,k])=>$(id).value=s[k]||'')}
+function saveSettings(){let s=data.settings;[['sName','name'],['sStreet','street'],['sZip','zip'],['sCity','city'],['sPhone','phone'],['sEmail','email'],['sTax','tax'],['sVat','vat'],['sBank','bank'],['sIban','iban'],['sBic','bic']].forEach(([id,k])=>s[k]=$(id).value);persist();alert('Gespeichert.')}
+function loadDesign(){let d=data.design;$('dTemplate').value=d.template;$('dTitle').value=d.title;$('dFont').value=d.font;$('dLogoPos').value=d.logoPos;$('dColor').value=d.color;$('dThanksOn').checked=d.thanksOn;$('dThanks').value=d.thanks;$('dTaxText').value=d.taxText;document.documentElement.style.setProperty('--accent',d.color)}
+function saveDesign(){let d=data.design;d.template=$('dTemplate').value;d.title=$('dTitle').value;d.font=+$('dFont').value;d.logoPos=$('dLogoPos').value;d.color=$('dColor').value;d.thanksOn=$('dThanksOn').checked;d.thanks=$('dThanks').value;d.taxText=$('dTaxText').value;persist();document.documentElement.style.setProperty('--accent',d.color);alert('Design gespeichert.')}
+function uploadLogo(inp){let f=inp.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{data.design.logo=r.result;persist();alert('Logo gespeichert.')};r.readAsDataURL(f)}
+function designPreview(){saveDesign();let sample={id:'sample',customerNo:'7',no:'6',date:today(),due:today(),status:'open',customer:{name:'Musterkunde',street:'Musterstraße 14',zip:'29378',city:'Musterort'},items:[{article:'2',desc:'Stundenlohn',unit:'Std.',qty:10,price:20}],note:'Die Rechnung ist nach der Ausstellung zu zahlen.\\n\\nBitte geben Sie im Verwendungszweck Ihren Namen und die Rechnungsnummer an.'};current=sample;renderPaper();$('designMini').innerHTML=$('paper').innerHTML;window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})}
+function openPreview(id){current=JSON.parse(JSON.stringify(data.invoices.find(x=>x.id===id)||current));renderPaper();show('preview')}
+function renderPaper(){let i=current,s=data.settings,d=data.design,logo=d.logo?`<img class="invoice-logo" src="${d.logo}">`:'',rows=i.items.map((x,n)=>`<tr><td>${n+1}</td><td>${esc(x.article)}</td><td>${esc(x.desc)}</td><td>${esc(x.unit)}</td><td class="right">${x.qty}</td><td class="right">${eur(x.price).replace('€','')}</td><td class="right">${eur(x.qty*x.price).replace('€','')}</td></tr>`).join('');let left=`<div><h1 class="invoice-title">${esc(d.title)}</h1><div class="company-block"><strong>${esc(i.customer.name)}</strong><br>${esc(i.customer.street)}<br>${esc(i.customer.zip)} ${esc(i.customer.city)}</div></div>`,right=`<div class="company-block">${logo}<br><strong>${esc(s.name)}</strong><br>${esc(s.street)}<br>${esc(s.zip)} ${esc(s.city)}<br><br>Telefon: ${esc(s.phone)}<br>E-Mail: ${esc(s.email)}<br><br>Bankverbindung<br>${esc(s.bank)}<br>IBAN: ${esc(s.iban)}<br>BIC: ${esc(s.bic)}${s.vat?'<br>USt-IdNr.: '+esc(s.vat):''}</div>`;$('paper').innerHTML=`<div class="invoice-paper" style="font-size:${d.font}px"><div class="senderline">${esc(s.name)} · ${esc(s.street)} · ${esc(s.zip)} ${esc(s.city)}</div><div class="invoice-head">${d.logoPos==='left'?right+left:left+right}</div><table class="meta"><tr><th>Kunden-Nr.</th><th>Rechnungs-Nr.</th><th>Datum</th></tr><tr><td>${esc(i.customerNo)}</td><td>${esc(i.no)}</td><td>${fmt(i.date)}</td></tr></table><table class="pos"><thead><tr><th>Pos.</th><th>Artikel-Nr.</th><th>Bezeichnung</th><th>Einheit</th><th class="right">Menge</th><th class="right">Einzelpreis</th><th class="right">Gesamtpreis</th></tr></thead><tbody>${rows}</tbody></table><div class="totalLine">Gesamtbetrag € &nbsp; ${eur(total(i)).replace('€','')}</div><div class="invoiceNotes">${esc(d.taxText)}<br><br>${esc(i.note).replace(/\n/g,'<br>')}</div>${d.thanksOn?`<div class="thank">${esc(d.thanks)}</div>`:''}<div style="font-size:9px;margin-top:18px">Versandart &nbsp;&nbsp; E-Mail ${s.tax?'&nbsp;&nbsp;&nbsp; Steuernummer: '+esc(s.tax):''}</div></div>`}
+function backup(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RechnungsApp-Sicherung-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
+function restore(inp){let f=inp.files[0];if(!f)return;if(!confirm('Aktuelle Daten durch diese Sicherung ersetzen?'))return;let r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);persist();alert('Sicherung wiederhergestellt.');location.reload()}catch(e){alert('Die Datei ist keine gültige Sicherung.')}};r.readAsText(f)}
+document.documentElement.style.setProperty('--accent',data.design.color||'#172033');renderDashboard();
+</script></body></html>
